@@ -63,8 +63,13 @@ public class ConnectivityBroadcastReceiver extends BroadcastReceiver
   public void onCancel(Object arguments) {
     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       if (networkCallback != null) {
-        connectivity.getConnectivityManager().unregisterNetworkCallback(networkCallback);
-        networkCallback = null;
+        try {
+          connectivity.getConnectivityManager().unregisterNetworkCallback(networkCallback);
+        } catch (Exception e) {
+          //listen never called, ignore the error
+        } finally {
+          networkCallback = null;
+        }
       }
     } else {
       try {
